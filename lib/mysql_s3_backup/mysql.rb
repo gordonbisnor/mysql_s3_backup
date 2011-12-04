@@ -40,14 +40,20 @@ module MysqlS3Backup
       run "gunzip -c #{file} | #{@bin_path}mysql #{cli_options}"
     end
     
+    def get_log_list
+      execute("show binary logs").            # get the result
+        split("\n")[1..-1].                   # remove the header
+        map { |line| line.split("\t").first } # return only the filename
+    end
+    
     def each_bin_log
       execute "flush logs"
-      logs = Dir.glob("#{@bin_log_path}.[0-9]*").sort
+      logs = get_log_list
       logs_to_archive = logs[0..-2] # all logs except the last
       logs_to_archive.each do |log|
-        yield log
+        yield File.join(File.dirname(@bin_log_path), log)
       end
-      execute "purge master logs to '#{File.basename(logs[-1])}'"
+      execute "purge master logs to '#{logs[-1]}'"
     end
     
     def apply_bin_log(file)
