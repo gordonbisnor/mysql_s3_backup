@@ -10,7 +10,7 @@ module MysqlS3Backup
     end
     
     def connect
-      AWS::S3::Base.establish_connection!(@s3_options)
+      AWS::S3.new(@s3_options)
     end
     
     def create
