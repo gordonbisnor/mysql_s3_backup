@@ -12,6 +12,6 @@ Gem::Specification.new do |s|
   s.summary         = "A simple backup script for Mysql and S3 with incremental backups."
   s.test_files      = Dir["spec/**"]
   
-  s.add_dependency  "aws-s3"
+  s.add_dependency  "aws-sdk"
   s.add_dependency  "lockfile"
 end
