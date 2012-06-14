@@ -1,4 +1,4 @@
-require "aws/s3"
+require 'aws-sdk'
 
 module MysqlS3Backup
   class Bucket
