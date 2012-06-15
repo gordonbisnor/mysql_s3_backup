@@ -10,16 +10,16 @@ module MysqlS3Backup
     end
     
     def connect
-      AWS::S3.new(@s3_options)
+      @s3 = AWS::S3.new(@s3_options)
     end
     
     def create
       # It doesn't hurt to try to create a bucket that already exists
-      AWS::S3::Bucket.create(@name)
+      @bucket = @s3.buckets.create(@name)
     end
     
     def store(file_name, file)
-      AWS::S3::S3Object.store(file_name, open(file), @name)
+      @object.write(open(file))
     end
     
     def copy(file_name, new_file_name)
@@ -35,7 +35,7 @@ module MysqlS3Backup
     end
     
     def find(prefix)
-      AWS::S3::Bucket.objects(@name, :prefix => prefix).map { |obj| obj.key }
+      @object = @bucket.objects[@name]
     end
     
     def delete_all(prefix)
